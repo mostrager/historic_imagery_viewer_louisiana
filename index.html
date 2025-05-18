@@ -26,39 +26,56 @@
   <div class="download-panel">
     <h3>Historic DOQQ Downloads</h3>
     <ul>
-      <li><a href="https://oshimagery.s3.us-east-1.amazonaws.com/1998+Louisiana+State+Aerial+(EPSG+26915)+.tif" target="_blank">Imagery 1 (COG)</a></li>
-      <li><a href="https://oshimagery.s3.us-east-1.amazonaws.com/2004+Louisiana+State+Aerial+(EPSG+26915).tif" target="_blank">Imagery 2 (COG)</a></li>
-      <li><a href="https://oshimagery.s3.us-east-1.amazonaws.com/2005+Coastal+Louisiana+Aerial+(EPSG+26915).tif" target="_blank">Imagery 3 (COG)</a></li>
-      <li><a href="https://oshimagery.s3.us-east-1.amazonaws.com/2008+True+Color+Coastal+Louisiana+Aerial+Imagery.tif" target="_blank">Imagery 4 (COG)</a></li>
+      <li><a href="https://oshimagery.s3.us-east-1.amazonaws.com/1998+Louisiana+State+Aerial+(EPSG+26915)+.tif" target="_blank">1998 Louisiana State Aerial</a></li>
+      <li><a href="https://oshimagery.s3.us-east-1.amazonaws.com/2004+Louisiana+State+Aerial+(EPSG+26915).tif" target="_blank">2004 Louisiana State Aerial</a></li>
+      <li><a href="https://oshimagery.s3.us-east-1.amazonaws.com/2005+Coastal+Louisiana+Aerial+(EPSG+26915).tif" target="_blank">2005 Coastal Louisiana Aerial</a></li>
+      <li><a href="https://oshimagery.s3.us-east-1.amazonaws.com/2008+True+Color+Coastal+Louisiana+Aerial+Imagery.tif" target="_blank">2008 True Color Coastal Aerial</a></li>
     </ul>
   </div>
+
   <div id="map"></div>
-  
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-tilelayer-cog@latest/leaflet-tilelayer-cog.js"></script>
   <script>
-    const map = L.map('map').setView([30.9843, -91.9623], 7); // Center on Louisiana
+    const map = L.map('map').setView([30.9843, -91.9623], 7); // Louisiana center
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    // Base map
+    const baseMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Replace these URLs with your actual S3 COG endpoints
-    const cogLayers = [
-      'https://oshimagery.s3.us-east-1.amazonaws.com/1998+Louisiana+State+Aerial+(EPSG+26915)+.tif',
-      'https://oshimagery.s3.us-east-1.amazonaws.com/2004+Louisiana+State+Aerial+(EPSG+26915).tif',
-      'https://oshimagery.s3.us-east-1.amazonaws.com/2005+Coastal+Louisiana+Aerial+(EPSG+26915).tif',
-      'https://oshimagery.s3.us-east-1.amazonaws.com/2008+True+Color+Coastal+Louisiana+Aerial+Imagery.tif'
-    ];
-
-    cogLayers.forEach(url => {
-      L.tileLayer.cog(url, {
-        attribution: 'Louisiana Historic DOQQ',
-        maxZoom: 18,
-        resolution: 256
-      }).addTo(map);
+    // COG imagery layers
+    const imagery1998 = L.tileLayer.cog("https://oshimagery.s3.us-east-1.amazonaws.com/1998+Louisiana+State+Aerial+(EPSG+26915)+.tif", {
+      attribution: "1998 LA State Aerial",
+      maxZoom: 18
     });
+
+    const imagery2004 = L.tileLayer.cog("https://oshimagery.s3.us-east-1.amazonaws.com/2004+Louisiana+State+Aerial+(EPSG+26915).tif", {
+      attribution: "2004 LA State Aerial",
+      maxZoom: 18
+    });
+
+    const imagery2005 = L.tileLayer.cog("https://oshimagery.s3.us-east-1.amazonaws.com/2005+Coastal+Louisiana+Aerial+(EPSG+26915).tif", {
+      attribution: "2005 Coastal LA Aerial",
+      maxZoom: 18
+    });
+
+    const imagery2008 = L.tileLayer.cog("https://oshimagery.s3.us-east-1.amazonaws.com/2008+True+Color+Coastal+Louisiana+Aerial+Imagery.tif", {
+      attribution: "2008 True Color Coastal",
+      maxZoom: 18
+    });
+
+    // Layer toggle control
+    const overlays = {
+      "1998 LA State Aerial": imagery1998,
+      "2004 LA State Aerial": imagery2004,
+      "2005 Coastal LA Aerial": imagery2005,
+      "2008 True Color Coastal": imagery2008
+    };
+
+    L.control.layers(null, overlays).addTo(map);
   </script>
 </body>
 </html>
